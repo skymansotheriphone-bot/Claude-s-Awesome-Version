@@ -92,6 +92,10 @@ input[type=color]{padding:4px;height:43px}
 
 </style></head><body>
 <div id="controller"><header><b>VOLLEYBALL LIVE · BROADCAST CONTROL</b></header><main>
+<section class="card" id="cloudAccess"><h2>LIVE CLOUD CONNECTION</h2>
+<p class="note" id="cloudStatus">Connecting to Firebase…</p>
+<div class="row"><button class="primary" id="cloudLogin">Sign in to control live score</button><button id="cloudLogout" class="hidden">Sign out</button></div>
+<p class="note">Sign in on the Android controller. The broadcast overlay can stay signed out and will receive live score updates.</p></section>
 <div class="toolbar"><button class="primary" id="openOverlay">Open broadcast overlay ↗</button><button id="undo">↶ Undo</button><button class="danger" id="reset">Reset match</button></div>
 <section class="teams">
 <div class="team" id="hc"><div class="head"><div class="logo" id="hl">H</div><div><div class="name" id="hn">HOME</div><small id="hs">0 SETS WON</small></div></div><div class="score" id="hscore">0</div><div class="actions"><button class="good" id="hp">+ POINT</button><button id="hm">− POINT</button></div><div class="meta"><span id="ht">Timeouts: 2</span><span id="hserve"></span></div></div>
@@ -114,10 +118,10 @@ input[type=color]{padding:4px;height:43px}
 <div class="panel" id="oside" data-state=""><div class="pset" id="oset">SET 1</div><div class="pstate" id="opoint"></div></div>
 <div class="hist" id="ohist"></div>
 </div></div></div>
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
-
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
+<script>
 const firebaseConfig = {
   apiKey: "AIzaSyDrHPPekhMb2MxaCxs5_0UyOln1x-35c2w",
   authDomain: "volleyball-live-d3f7a.firebaseapp.com",
@@ -127,10 +131,10 @@ const firebaseConfig = {
   messagingSenderId: "968992446571",
   appId: "1:968992446571:web:1cae017b7a587305ef792e"
 };
-
-const app = initializeApp(firebaseConfig);
-const db = getDatabase(app);
-const scoreboardRef = ref(db, "scoreboard");
+firebase.initializeApp(firebaseConfig);
+const fbAuth = firebase.auth();
+const fbDb = firebase.database();
+const matchRef = fbDb.ref("volleyball-live/current");
 
 const D=()=>({home:'HOME',away:'AWAY',homeColor:'#1769aa',awayColor:'#b72b3c',homeLogo:'',awayLogo:'',format:3,target:25,finalTarget:15,timeoutLimit:2,set:1,homeScore:0,awayScore:0,homeSets:0,awaySets:0,serve:'home',timeoutsHome:2,timeoutsAway:2,history:[],finished:false,undo:[]});
 const $=id=>document.getElementById(id);function load(){try{return JSON.parse(localStorage.getItem('vb-live-state'))}catch(e){return null}}let s=load()||D();
@@ -151,7 +155,16 @@ $('oset').textContent=s.finished?'FINAL':'SET '+s.set;$('opoint').textContent=st
 $('ohist').textContent=s.history.map((x,i)=>'S'+(i+1)+' '+x.h+'\u2013'+x.a).join('   ');
 logo($('ohl'),s.homeLogo,s.home[0].toUpperCase());logo($('oal'),s.awayLogo,s.away[0].toUpperCase());
 if(changed){let el=$(changed==='home'?'ohscore':'oascore');el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}}
-function save(changed){localStorage.setItem('vb-live-state',JSON.stringify(s));render(changed)}
+function save(changed){
+  localStorage.setItem('vb-live-state',JSON.stringify(s));
+  render(changed);
+  if(!ov && fbAuth.currentUser){
+    matchRef.set(s).catch(err=>{
+      console.error(err);
+      $('cloudStatus').textContent='Firebase write failed: '+err.message;
+    });
+  }
+}
 function check(){let t=s.set===s.format?s.finalTarget:s.target,a=s.homeScore,b=s.awayScore;if(Math.max(a,b)>=t&&Math.abs(a-b)>=2){let w=a>b?'home':'away';s[w+'Sets']++;s.history.push({h:a,a:b});if(s[w+'Sets']>=Math.ceil(s.format/2))s.finished=true;else{s.set++;s.homeScore=0;s.awayScore=0;s.timeoutsHome=s.timeoutLimit;s.timeoutsAway=s.timeoutLimit;s.serve=w}}}
 function point(team,d){if(s.finished)return;snap();s[team+'Score']=Math.max(0,s[team+'Score']+d);if(d>0)s.serve=team;check();save(d>0?team:null)}
 function timeout(team){let k=team==='home'?'timeoutsHome':'timeoutsAway';if(!s.finished&&s[k]>0){snap();s[k]--;save()}}
@@ -162,5 +175,47 @@ $('apply').onclick=()=>{snap();s.home=$('homeName').value.trim()||'HOME';s.away=
 $('openOverlay').onclick=()=>window.open(location.href.split('?')[0]+'?overlay=1','vb-overlay');$('copy').onclick=async()=>{let u=location.href.split('?')[0]+'?overlay=1';try{await navigator.clipboard.writeText(u);alert('Overlay URL copied')}catch(e){prompt('Copy overlay URL',u)}};
 $('export').onclick=()=>{let b=new Blob([JSON.stringify(s,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='volleyball-match-backup.json';a.click();URL.revokeObjectURL(a.href)};$('import').onclick=()=>$('file').click();$('file').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{s=JSON.parse(r.result);save()}catch(e){alert('Invalid backup')}};r.readAsText(f)};
 let ov=new URLSearchParams(location.search).get('overlay')==='1';if(ov){document.querySelector('.stage').dataset.pos=new URLSearchParams(location.search).get('pos')||'left';$('controller').classList.add('hidden');$('overlayScreen').classList.remove('hidden');document.body.style.background='transparent';document.documentElement.style.background='transparent'}else{let map={homeName:'home',awayName:'away',homeColor:'homeColor',awayColor:'awayColor',homeLogo:'homeLogo',awayLogo:'awayLogo',format:'format',target:'target',finalTarget:'finalTarget',timeoutLimit:'timeoutLimit'};Object.entries(map).forEach(([id,k])=>$(id).value=s[k])}render();
-window.addEventListener('storage',e=>{if(e.key==='vb-live-state'){s=load()||s;render()}});if('BroadcastChannel'in window){let bc=new BroadcastChannel('vb-live-score');bc.onmessage=()=>{s=load()||s;render()};let old=save;save=(c)=>{localStorage.setItem('vb-live-state',JSON.stringify(s));bc.postMessage('update');render(c)}}
+
+// Firebase sign-in is required only for the controller. The overlay is read-only.
+if(!ov){
+  $('cloudLogin').onclick=async()=>{
+    const email=prompt('Firebase controller account email:');
+    if(!email)return;
+    const password=prompt('Firebase controller account password:');
+    if(!password)return;
+    try{await fbAuth.signInWithEmailAndPassword(email.trim(),password)}
+    catch(err){alert('Sign-in failed: '+err.message)}
+  };
+  $('cloudLogout').onclick=()=>fbAuth.signOut();
+  fbAuth.onAuthStateChanged(user=>{
+    $('cloudLogin').classList.toggle('hidden',!!user);
+    $('cloudLogout').classList.toggle('hidden',!user);
+    $('cloudStatus').textContent=user
+      ? 'Connected as '+user.email+'. Score changes sync live to the broadcast overlay.'
+      : 'Not signed in. Local controls work on this device, but live cloud updates require sign-in.';
+    if(user && window.__firebaseSnapshotMissing){
+      matchRef.set(s).catch(err=>{$('cloudStatus').textContent='Firebase write failed: '+err.message});
+      window.__firebaseSnapshotMissing=false;
+    }
+  });
+}
+
+// Subscribe on both devices. Database rules should allow public reads and authenticated writes.
+matchRef.on('value',snapshot=>{
+  const remote=snapshot.val();
+  if(remote && typeof remote==='object'){
+    s={...D(),...remote};
+    if(!Array.isArray(s.undo))s.undo=[];
+    localStorage.setItem('vb-live-state',JSON.stringify(s));
+    render();
+  }else{
+    window.__firebaseSnapshotMissing=true;
+    if(!ov && fbAuth.currentUser){
+      matchRef.set(s).catch(err=>{$('cloudStatus').textContent='Firebase write failed: '+err.message});
+      window.__firebaseSnapshotMissing=false;
+    }
+  }
+});
+
+window.addEventListener('storage',e=>{if(e.key==='vb-live-state'){s=load()||s;render()}});if('BroadcastChannel'in window){let bc=new BroadcastChannel('vb-live-score');bc.onmessage=()=>{s=load()||s;render()};let old=save;save=(c)=>{old(c);bc.postMessage('update')}}
 </script></body></html>
