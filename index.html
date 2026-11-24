@@ -114,7 +114,24 @@ input[type=color]{padding:4px;height:43px}
 <div class="panel" id="oside" data-state=""><div class="pset" id="oset">SET 1</div><div class="pstate" id="opoint"></div></div>
 <div class="hist" id="ohist"></div>
 </div></div></div>
-<script>
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyDrHPPekhMb2MxaCxs5_0UyOln1x-35c2w",
+  authDomain: "volleyball-live-d3f7a.firebaseapp.com",
+  databaseURL: "https://volleyball-live-d3f7a-default-rtdb.firebaseio.com",
+  projectId: "volleyball-live-d3f7a",
+  storageBucket: "volleyball-live-d3f7a.firebasestorage.app",
+  messagingSenderId: "968992446571",
+  appId: "1:968992446571:web:1cae017b7a587305ef792e"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getDatabase(app);
+const scoreboardRef = ref(db, "scoreboard");
+
 const D=()=>({home:'HOME',away:'AWAY',homeColor:'#1769aa',awayColor:'#b72b3c',homeLogo:'',awayLogo:'',format:3,target:25,finalTarget:15,timeoutLimit:2,set:1,homeScore:0,awayScore:0,homeSets:0,awaySets:0,serve:'home',timeoutsHome:2,timeoutsAway:2,history:[],finished:false,undo:[]});
 const $=id=>document.getElementById(id);function load(){try{return JSON.parse(localStorage.getItem('vb-live-state'))}catch(e){return null}}let s=load()||D();
 function logo(el,url,letter){el.innerHTML='';if(url){let i=document.createElement('img');i.src=url;i.onerror=()=>el.textContent=letter;el.append(i)}else el.textContent=letter}
