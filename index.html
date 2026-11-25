@@ -1,4 +1,4 @@
-<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Volleyball Live</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700;800&display=swap" rel="stylesheet">
+<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Volleyball Live</title><link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&display=swap" rel="stylesheet">
 <style>
 
 :root{
@@ -49,53 +49,50 @@ input[type=color]{padding:4px;height:43px}
 .hidden{display:none!important}
 
 
-/* ESPN-style stacked volleyball scorebug */
+/* ESPN-style broadcast scorebug: thin banner */
 #overlayScreen{position:fixed;inset:0;background:transparent;pointer-events:none}
-.stage{position:absolute;bottom:6%;left:3%;font-size:clamp(9px,1.45vw,28px)}
+.stage{position:absolute;bottom:4%;left:3%;font-size:clamp(9px,1.15vw,22px)}
 .stage[data-pos=center]{left:50%;transform:translateX(-50%)}
 .stage[data-pos=right]{left:auto;right:3%}
-.bug{display:grid;grid-template-columns:minmax(0,1fr) 6em;width:27em;overflow:hidden;border-radius:.3em;
- font-family:"Barlow Condensed","Roboto Condensed","Arial Narrow",Arial,sans-serif;
- box-shadow:0 .3em 1em rgba(0,0,0,.5);animation:enter .6s cubic-bezier(.2,.8,.2,1) both}
-.rows{grid-column:1;grid-row:1;display:flex;flex-direction:column}
-.trow{display:grid;grid-template-columns:2.6em minmax(0,1fr) auto auto auto 2.6em;align-items:center;height:2.5em;color:var(--k);background:var(--c)}
-@supports (background:color-mix(in srgb,red,blue)){
- .trow{background:linear-gradient(180deg,color-mix(in srgb,var(--c),#fff 16%),var(--c) 50%,color-mix(in srgb,var(--c),#000 22%))}
-}
-.trow.home{--c:var(--hc,#1769aa);--k:var(--hk,#fff)}
-.trow.away{--c:var(--ac,#b72b3c);--k:var(--ak,#fff)}
-.trow+.trow{border-top:.06em solid rgba(0,0,0,.4)}
-.tlogo{align-self:stretch;display:grid;place-items:center;background:#f4f6f8;color:var(--c);font-size:1.5em;font-weight:800;overflow:hidden}
-.tlogo img{width:100%;height:100%;object-fit:contain;padding:.12em}
-.tname{padding-left:.55em;font-size:1.2em;font-stretch:condensed;font-weight:700;text-transform:uppercase;letter-spacing:.03em;line-height:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sv{width:.62em;height:.62em;margin:0 .35em;border-radius:50%;background:#ffd23f;box-shadow:0 0 0 .13em rgba(0,0,0,.4);visibility:hidden}
+.bug{display:flex;align-items:stretch;height:3.2em;color:#1b1f24;border-radius:.2em;overflow:hidden;
+ font-family:"Barlow Semi Condensed","Roboto Condensed","Arial Narrow",Arial,sans-serif;
+ background:linear-gradient(180deg,#ffffff 0%,#ececed 16%,#d8d9dc 52%,#b9bbc0 100%);
+ box-shadow:0 .3em .9em rgba(0,0,0,.5),inset 0 .09em 0 rgba(255,255,255,.95),inset 0 -.2em .4em rgba(0,0,0,.28),inset 0 0 .6em rgba(0,0,0,.14);
+ animation:enter .6s cubic-bezier(.2,.8,.2,1) both}
+.tm{display:flex;align-items:center;padding:0 .6em 0 .55em}
+.tm+.tm{border-left:.06em solid rgba(0,0,0,.22);box-shadow:inset .06em 0 0 rgba(255,255,255,.75)}
+.tm{text-shadow:0 .05em 0 rgba(255,255,255,.65)}
+.tm.home{--c:var(--hc,#1769aa);--k:var(--hk,#fff)}
+.tm.away{--c:var(--ac,#b72b3c);--k:var(--ak,#fff)}
+.tlogo{flex:none;width:2.4em;height:2.4em;margin-right:.55em;display:grid;place-items:center;border-radius:50%;background:var(--c);color:var(--k);font-size:1.15em;font-weight:700;overflow:hidden;box-shadow:0 .12em .3em rgba(0,0,0,.45),inset 0 .08em .12em rgba(255,255,255,.35),inset 0 -.12em .2em rgba(0,0,0,.3);text-shadow:0 .05em .1em rgba(0,0,0,.4)}
+.tlogo.img{background:none;border-radius:0}
+.tlogo img{width:100%;height:100%;object-fit:contain}
+.tinfo{display:flex;flex-direction:column;justify-content:center;min-width:8.5em;max-width:13em}
+.tline{display:flex;align-items:baseline;gap:.3em;font-size:1.3em;line-height:1.05;white-space:nowrap}
+.rk{font-size:.8em;font-weight:600;color:#4a4f55}
+.nm{font-weight:600;overflow:hidden;text-overflow:ellipsis}
+.rk:empty{display:none}
+.sv{flex:none;align-self:center;width:0;height:0;margin-left:.2em;border-style:solid;border-width:.28em .42em .28em 0;border-color:transparent #1b1f24 transparent transparent;visibility:hidden}
 .sv.on{visibility:visible}
-.tos{display:flex;margin-right:.55em}
-.tos i{width:.2em;height:.85em;margin-left:.14em;border-radius:.05em;background:currentColor}
-.tos i.used{opacity:.25}
-.pips{display:flex;gap:.28em;margin-right:.65em}
-.pips i{box-sizing:border-box;width:.62em;height:.62em;border-radius:50%;border:.13em solid currentColor}
-.pips i.on{background:currentColor}
-.tscore{align-self:stretch;display:grid;place-items:center;background:#f4f6f8;color:#0d1217;font-size:1.85em;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
-.panel{grid-column:2;grid-row:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.3em;background:linear-gradient(180deg,#1b2128,#0f1318);color:#fff;border-left:.22em solid #d4151d}
-.pset{font-size:1.55em;font-weight:800;letter-spacing:.04em;line-height:1}
-.pstate{font-size:.6em;font-weight:700;letter-spacing:.08em;padding:.15em .55em;border-radius:.2em;background:#d4151d;color:#fff;white-space:nowrap;animation:blink 1.4s ease-in-out infinite}
-.pstate:empty{display:none}
-.panel[data-state=match] .pstate{background:#ffd23f;color:#1a1400}
-.hist{grid-column:1/-1;grid-row:2;background:#0b0e12;color:#c4ccd4;font-size:.78em;font-weight:600;letter-spacing:.06em;text-align:center;padding:.3em .6em;white-space:pre;border-top:.06em solid rgba(255,255,255,.08)}
-.hist:empty{display:none}
+.dash{display:flex;gap:.3em;margin:.2em 0 .12em}
+.dash i{width:1em;height:.2em;border-radius:.05em;background:var(--c)}
+.dash i.used{opacity:.22}
+.dash:empty{display:none}
+.rec{font-size:.74em;font-weight:500;letter-spacing:.02em;color:#4a4f55;white-space:nowrap}
+.rec:empty{display:none}
+.sc{min-width:.95em;margin-left:.45em;text-align:center;font-size:2.15em;font-weight:700;line-height:1;font-variant-numeric:tabular-nums}
+.stat{display:flex;align-items:center;gap:.6em;padding:0 1em;margin-left:.3em;background:linear-gradient(180deg,#f2f3f4,#fdfdfd);border-left:.08em solid rgba(0,0,0,.3);box-shadow:inset 0 .22em .45em rgba(0,0,0,.22),inset .1em 0 .3em rgba(0,0,0,.12),inset 0 -.07em 0 rgba(255,255,255,.9);text-shadow:0 .05em 0 rgba(255,255,255,.8);font-size:1.15em;font-weight:600;letter-spacing:.02em;text-transform:uppercase;white-space:nowrap}
+.pill{padding:.18em .6em;border-radius:.2em;background:#d4151d;color:#fff;font-size:.72em;font-weight:700;letter-spacing:.08em;animation:blink 1.4s ease-in-out infinite}
+.pill:empty{display:none}
+.pill.match{background:#f5b800;color:#1a1400}
 .flash{animation:pop .5s ease-out}
-@keyframes pop{0%{transform:scale(1.25);background:#ffd23f}100%{transform:scale(1);background:#f4f6f8}}
+@keyframes pop{0%{transform:scale(1.3);color:#d4151d}100%{transform:scale(1)}}
 @keyframes enter{from{opacity:0;transform:translateY(1.4em)}}
 @keyframes blink{50%{opacity:.7}}
-@media (prefers-reduced-motion:reduce){.bug,.flash,.pstate{animation:none}}
+@media (prefers-reduced-motion:reduce){.bug,.flash,.pill{animation:none}}
 
 </style></head><body>
 <div id="controller"><header><b>VOLLEYBALL LIVE · BROADCAST CONTROL</b></header><main>
-<section class="card" id="cloudAccess"><h2>LIVE CLOUD CONNECTION</h2>
-<p class="note" id="cloudStatus">Connecting to Firebase…</p>
-<div class="row"><button class="primary" id="cloudLogin">Sign in to control live score</button><button id="cloudLogout" class="hidden">Sign out</button></div>
-<p class="note">Sign in on the Android controller. The broadcast overlay can stay signed out and will receive live score updates.</p></section>
 <div class="toolbar"><button class="primary" id="openOverlay">Open broadcast overlay ↗</button><button id="undo">↶ Undo</button><button class="danger" id="reset">Reset match</button></div>
 <section class="teams">
 <div class="team" id="hc"><div class="head"><div class="logo" id="hl">H</div><div><div class="name" id="hn">HOME</div><small id="hs">0 SETS WON</small></div></div><div class="score" id="hscore">0</div><div class="actions"><button class="good" id="hp">+ POINT</button><button id="hm">− POINT</button></div><div class="meta"><span id="ht">Timeouts: 2</span><span id="hserve"></span></div></div>
@@ -105,117 +102,49 @@ input[type=color]{padding:4px;height:43px}
 <div class="field"><label>HOME TEAM</label><input id="homeName" maxlength="24"></div><div class="field"><label>AWAY TEAM</label><input id="awayName" maxlength="24"></div>
 <div class="field"><label>HOME COLOR</label><input id="homeColor" type="color"></div><div class="field"><label>AWAY COLOR</label><input id="awayColor" type="color"></div>
 <div class="field"><label>HOME LOGO URL</label><input id="homeLogo" placeholder="https://..."></div><div class="field"><label>AWAY LOGO URL</label><input id="awayLogo" placeholder="https://..."></div>
+<div class="field"><label>HOME RANK (OPTIONAL)</label><input id="homeRank" maxlength="3" placeholder="e.g. 2"></div><div class="field"><label>AWAY RANK (OPTIONAL)</label><input id="awayRank" maxlength="3" placeholder="e.g. 24"></div>
+<div class="field"><label>HOME RECORD (OPTIONAL)</label><input id="homeRecord" maxlength="20" placeholder="27-1 (17-1)"></div><div class="field"><label>AWAY RECORD (OPTIONAL)</label><input id="awayRecord" maxlength="20" placeholder="19-9 (12-6)"></div>
 <div class="field"><label>FORMAT</label><select id="format"><option value="3">Best of 3</option><option value="5">Best of 5</option></select></div><div class="field"><label>SETS 1–4 TARGET</label><select id="target"><option>25</option><option>21</option><option>15</option></select></div>
 <div class="field"><label>DECIDING SET TARGET</label><select id="finalTarget"><option>15</option><option>25</option><option>21</option></select></div><div class="field"><label>TIMEOUTS PER SET</label><select id="timeoutLimit"><option>2</option><option>1</option><option>3</option><option>0</option></select></div>
 <div class="wide"><button class="primary" id="apply">Apply settings</button></div></div></section>
-<section class="card"><h2>PRISM LIVE & BACKUP</h2><p class="note">In PRISM, add a Web Browser source using your GitHub Pages URL followed by <b>?overlay=1</b>. The bug sits bottom-left by default; add <b>&amp;pos=center</b> or <b>&amp;pos=right</b> to move it. This version retains browser-local saving; separate PRISM browser sync may require a Firebase/Supabase connection.</p><div class="row"><button id="copy">Copy overlay URL</button><button id="export">Export backup</button><button id="import">Import backup</button><input id="file" type="file" accept="application/json" hidden></div></section>
+<section class="card"><h2>PRISM LIVE & BACKUP</h2><p class="note">In PRISM, add a Web Browser source using your GitHub Pages URL followed by <b>?overlay=1</b>. The banner sits at the bottom-left by default; add <b>&amp;pos=center</b> or <b>&amp;pos=right</b> to move it. This version retains browser-local saving; separate PRISM browser sync may require a Firebase/Supabase connection.</p><div class="row"><button id="copy">Copy overlay URL</button><button id="export">Export backup</button><button id="import">Import backup</button><input id="file" type="file" accept="application/json" hidden></div></section>
 </main></div>
 <div id="overlayScreen" class="hidden"><div class="stage" data-pos="left"><div class="bug" id="bug">
-<div class="rows">
-<div class="trow home"><div class="tlogo" id="ohl">H</div><div class="tname" id="ohn">HOME</div><i class="sv" id="ohserve"></i><div class="tos" id="oht"></div><div class="pips" id="ohsets"></div><div class="tscore" id="ohscore">0</div></div>
-<div class="trow away"><div class="tlogo" id="oal">A</div><div class="tname" id="oan">AWAY</div><i class="sv" id="oaserve"></i><div class="tos" id="oat"></div><div class="pips" id="oasets"></div><div class="tscore" id="oascore">0</div></div>
-</div>
-<div class="panel" id="oside" data-state=""><div class="pset" id="oset">SET 1</div><div class="pstate" id="opoint"></div></div>
-<div class="hist" id="ohist"></div>
+<div class="tm home"><div class="tlogo" id="ohl">H</div><div class="tinfo"><div class="tline"><span class="rk" id="ohr"></span><span class="nm" id="ohn">HOME</span><i class="sv" id="ohserve"></i></div><div class="dash" id="oht"></div><div class="rec" id="ohrec"></div></div><div class="sc" id="ohscore">0</div></div>
+<div class="tm away"><div class="tlogo" id="oal">A</div><div class="tinfo"><div class="tline"><span class="rk" id="oar"></span><span class="nm" id="oan">AWAY</span><i class="sv" id="oaserve"></i></div><div class="dash" id="oat"></div><div class="rec" id="oarec"></div></div><div class="sc" id="oascore">0</div></div>
+<div class="stat"><span class="pill" id="opoint"></span><span id="oseries"></span></div>
 </div></div></div>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.14.1/firebase-database-compat.js"></script>
 <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyDrHPPekhMb2MxaCxs5_0UyOln1x-35c2w",
-  authDomain: "volleyball-live-d3f7a.firebaseapp.com",
-  databaseURL: "https://volleyball-live-d3f7a-default-rtdb.firebaseio.com",
-  projectId: "volleyball-live-d3f7a",
-  storageBucket: "volleyball-live-d3f7a.firebasestorage.app",
-  messagingSenderId: "968992446571",
-  appId: "1:968992446571:web:1cae017b7a587305ef792e"
-};
-firebase.initializeApp(firebaseConfig);
-const fbAuth = firebase.auth();
-const fbDb = firebase.database();
-const matchRef = fbDb.ref("volleyball-live/current");
-
-const D=()=>({home:'HOME',away:'AWAY',homeColor:'#1769aa',awayColor:'#b72b3c',homeLogo:'',awayLogo:'',format:3,target:25,finalTarget:15,timeoutLimit:2,set:1,homeScore:0,awayScore:0,homeSets:0,awaySets:0,serve:'home',timeoutsHome:2,timeoutsAway:2,history:[],finished:false,undo:[]});
+const D=()=>({home:'HOME',away:'AWAY',homeColor:'#1769aa',awayColor:'#b72b3c',homeLogo:'',awayLogo:'',homeRank:'',awayRank:'',homeRecord:'',awayRecord:'',format:3,target:25,finalTarget:15,timeoutLimit:2,set:1,homeScore:0,awayScore:0,homeSets:0,awaySets:0,serve:'home',timeoutsHome:2,timeoutsAway:2,history:[],finished:false,undo:[]});
 const $=id=>document.getElementById(id);function load(){try{return JSON.parse(localStorage.getItem('vb-live-state'))}catch(e){return null}}let s=load()||D();
 function logo(el,url,letter){el.innerHTML='';if(url){let i=document.createElement('img');i.src=url;i.onerror=()=>el.textContent=letter;el.append(i)}else el.textContent=letter}
 function ink(hex){let h=String(hex).replace('#','');if(h.length===3)h=h.split('').map(c=>c+c).join('');let r=parseInt(h.slice(0,2),16),g=parseInt(h.slice(2,4),16),b=parseInt(h.slice(4,6),16);return (r*299+g*587+b*114)/1000>150?'#10151a':'#fff'}
-function pips(el,won,total){el.innerHTML=Array.from({length:total},(_,i)=>'<i'+(i<won?' class="on"':'')+'></i>').join('')}
 function ticks(el,left,limit){el.innerHTML=Array.from({length:limit},(_,i)=>'<i'+(i>=left?' class="used"':'')+'></i>').join('')}
+function ologo(el,url,letter){let k=(url||'')+'|'+letter;if(el.dataset.k===k)return;el.dataset.k=k;el.className='tlogo';el.textContent=letter;if(url){let i=new Image();i.onload=()=>{if(el.dataset.k!==k)return;el.textContent='';el.classList.add('img');el.append(i)};i.src=url}}
+function short(n){return n.length>12?n.slice(0,12).trim()+'\u2026':n}
+function series(){let b='(BEST OF '+s.format+')',h=s.homeSets,a=s.awaySets;if(s.finished)return 'FINAL: '+short(h>a?s.home:s.away)+' WINS '+Math.max(h,a)+'-'+Math.min(h,a);if(!h&&!a)return 'SET '+s.set+' '+b;if(h===a)return 'TIED '+h+'-'+a+' '+b;return short(h>a?s.home:s.away)+' LEADS '+Math.max(h,a)+'-'+Math.min(h,a)+' '+b}
 function snap(){s.undo.push(JSON.stringify({...s,undo:[]}));if(s.undo.length>30)s.undo.shift()}
-function state(){if(s.finished)return'FINAL';let n=Math.ceil(s.format/2),t=s.set===s.format?s.finalTarget:s.target,h=s.homeScore,a=s.awayScore,sp=(h>=t-1&&h-a>=0)||(a>=t-1&&a-h>=0);if(sp&&(s.homeSets===n-1&&h>=t-1||s.awaySets===n-1&&a>=t-1))return'MATCH POINT';return sp?'SET POINT':''}
+function state(){if(s.finished)return'FINAL';let n=Math.ceil(s.format/2),t=s.set===s.format?s.finalTarget:s.target,h=s.homeScore,a=s.awayScore,hs=h>=t-1&&h-a>=1,as=a>=t-1&&a-h>=1;if(hs&&s.homeSets===n-1||as&&s.awaySets===n-1)return'MATCH POINT';return hs||as?'SET POINT':''}
 function render(changed){$('hn').textContent=s.home;$('an').textContent=s.away;$('hscore').textContent=s.homeScore;$('ascore').textContent=s.awayScore;$('hs').textContent=s.homeSets+' SETS WON';$('as').textContent=s.awaySets+' SETS WON';$('ht').textContent='Timeouts: '+s.timeoutsHome;$('at').textContent='Timeouts: '+s.timeoutsAway;$('hserve').textContent=s.serve==='home'?'● SERVING':'';$('aserve').textContent=s.serve==='away'?'● SERVING':'';$('setlabel').textContent='SET '+s.set;$('formatlabel').textContent=s.finished?'MATCH COMPLETE':'Best of '+s.format;$('hc').style.borderTopColor=s.homeColor;$('ac').style.borderTopColor=s.awayColor;document.documentElement.style.setProperty('--blue',s.homeColor);document.documentElement.style.setProperty('--red',s.awayColor);logo($('hl'),s.homeLogo,s.home[0].toUpperCase());logo($('al'),s.awayLogo,s.away[0].toUpperCase());$('sh').classList.toggle('active',s.serve==='home');$('sa').classList.toggle('active',s.serve==='away');$('next').disabled=s.finished;$('history').innerHTML='';s.history.forEach((x,i)=>{let e=document.createElement('span');e.className='chip';e.textContent='S'+(i+1)+' '+x.h+'–'+x.a;$('history').append(e)});
-const ovs=$('overlayScreen').style,hc=s.homeColor||'#1769aa',ac=s.awayColor||'#b72b3c',need=Math.ceil(s.format/2),st=s.finished?'':state();
+const ovs=$('overlayScreen').style,hc=s.homeColor||'#1769aa',ac=s.awayColor||'#b72b3c',st=s.finished?'':state();
 ovs.setProperty('--hc',hc);ovs.setProperty('--hk',ink(hc));ovs.setProperty('--ac',ac);ovs.setProperty('--ak',ink(ac));
-$('ohn').textContent=s.home;$('oan').textContent=s.away;$('ohscore').textContent=s.homeScore;$('oascore').textContent=s.awayScore;
-pips($('ohsets'),s.homeSets,need);pips($('oasets'),s.awaySets,need);
+$('ohn').textContent=s.home;$('oan').textContent=s.away;$('ohr').textContent=s.homeRank||'';$('oar').textContent=s.awayRank||'';$('ohrec').textContent=s.homeRecord||'';$('oarec').textContent=s.awayRecord||'';
+$('ohscore').textContent=s.homeScore;$('oascore').textContent=s.awayScore;
 $('ohserve').classList.toggle('on',s.serve==='home'&&!s.finished);$('oaserve').classList.toggle('on',s.serve==='away'&&!s.finished);
 ticks($('oht'),s.timeoutsHome,s.timeoutLimit);ticks($('oat'),s.timeoutsAway,s.timeoutLimit);
-$('oset').textContent=s.finished?'FINAL':'SET '+s.set;$('opoint').textContent=st;$('oside').dataset.state=st==='MATCH POINT'?'match':'';
-$('ohist').textContent=s.history.map((x,i)=>'S'+(i+1)+' '+x.h+'\u2013'+x.a).join('   ');
-logo($('ohl'),s.homeLogo,s.home[0].toUpperCase());logo($('oal'),s.awayLogo,s.away[0].toUpperCase());
+$('opoint').textContent=st;$('opoint').className='pill'+(st==='MATCH POINT'?' match':'');$('oseries').textContent=series();
+ologo($('ohl'),s.homeLogo,s.home[0].toUpperCase());ologo($('oal'),s.awayLogo,s.away[0].toUpperCase());
 if(changed){let el=$(changed==='home'?'ohscore':'oascore');el.classList.remove('flash');void el.offsetWidth;el.classList.add('flash')}}
-function save(changed){
-  localStorage.setItem('vb-live-state',JSON.stringify(s));
-  render(changed);
-  if(!ov && fbAuth.currentUser){
-    matchRef.set(s).catch(err=>{
-      console.error(err);
-      $('cloudStatus').textContent='Firebase write failed: '+err.message;
-    });
-  }
-}
+function save(changed){localStorage.setItem('vb-live-state',JSON.stringify(s));render(changed)}
 function check(){let t=s.set===s.format?s.finalTarget:s.target,a=s.homeScore,b=s.awayScore;if(Math.max(a,b)>=t&&Math.abs(a-b)>=2){let w=a>b?'home':'away';s[w+'Sets']++;s.history.push({h:a,a:b});if(s[w+'Sets']>=Math.ceil(s.format/2))s.finished=true;else{s.set++;s.homeScore=0;s.awayScore=0;s.timeoutsHome=s.timeoutLimit;s.timeoutsAway=s.timeoutLimit;s.serve=w}}}
 function point(team,d){if(s.finished)return;snap();s[team+'Score']=Math.max(0,s[team+'Score']+d);if(d>0)s.serve=team;check();save(d>0?team:null)}
 function timeout(team){let k=team==='home'?'timeoutsHome':'timeoutsAway';if(!s.finished&&s[k]>0){snap();s[k]--;save()}}
 $('hp').onclick=()=>point('home',1);$('ap').onclick=()=>point('away',1);$('hm').onclick=()=>point('home',-1);$('am').onclick=()=>point('away',-1);$('th').onclick=()=>timeout('home');$('ta').onclick=()=>timeout('away');$('sh').onclick=()=>{snap();s.serve='home';save()};$('sa').onclick=()=>{snap();s.serve='away';save()};
 $('next').onclick=()=>{if(s.finished||(!s.homeScore&&!s.awayScore))return;let t=s.set===s.format?s.finalTarget:s.target;if(Math.max(s.homeScore,s.awayScore)>=t&&Math.abs(s.homeScore-s.awayScore)>=2){snap();check()}else{if(!confirm('Current set is not complete. Start the next set anyway?'))return;snap();s.history.push({h:s.homeScore,a:s.awayScore});s.set++;s.homeScore=s.awayScore=0;s.timeoutsHome=s.timeoutsAway=s.timeoutLimit}save()};
-$('undo').onclick=()=>{if(!s.undo.length)return;let x=JSON.parse(s.undo.pop());x.undo=s.undo;s=x;save()};$('reset').onclick=()=>{if(!confirm('Reset entire match?'))return;let k={home:s.home,away:s.away,homeColor:s.homeColor,awayColor:s.awayColor,homeLogo:s.homeLogo,awayLogo:s.awayLogo,format:s.format,target:s.target,finalTarget:s.finalTarget,timeoutLimit:s.timeoutLimit};s={...D(),...k,timeoutsHome:k.timeoutLimit,timeoutsAway:k.timeoutLimit};save()};
-$('apply').onclick=()=>{snap();s.home=$('homeName').value.trim()||'HOME';s.away=$('awayName').value.trim()||'AWAY';s.homeColor=$('homeColor').value;s.awayColor=$('awayColor').value;s.homeLogo=$('homeLogo').value.trim();s.awayLogo=$('awayLogo').value.trim();s.format=+$('format').value;s.target=+$('target').value;s.finalTarget=+$('finalTarget').value;s.timeoutLimit=+$('timeoutLimit').value;s.timeoutsHome=s.timeoutsAway=s.timeoutLimit;save()};
+$('undo').onclick=()=>{if(!s.undo.length)return;let x=JSON.parse(s.undo.pop());x.undo=s.undo;s=x;save()};$('reset').onclick=()=>{if(!confirm('Reset entire match?'))return;let k={home:s.home,away:s.away,homeColor:s.homeColor,awayColor:s.awayColor,homeLogo:s.homeLogo,awayLogo:s.awayLogo,homeRank:s.homeRank,awayRank:s.awayRank,homeRecord:s.homeRecord,awayRecord:s.awayRecord,format:s.format,target:s.target,finalTarget:s.finalTarget,timeoutLimit:s.timeoutLimit};s={...D(),...k,timeoutsHome:k.timeoutLimit,timeoutsAway:k.timeoutLimit};save()};
+$('apply').onclick=()=>{snap();s.home=$('homeName').value.trim()||'HOME';s.away=$('awayName').value.trim()||'AWAY';s.homeColor=$('homeColor').value;s.awayColor=$('awayColor').value;s.homeLogo=$('homeLogo').value.trim();s.awayLogo=$('awayLogo').value.trim();s.homeRank=$('homeRank').value.trim();s.awayRank=$('awayRank').value.trim();s.homeRecord=$('homeRecord').value.trim();s.awayRecord=$('awayRecord').value.trim();s.format=+$('format').value;s.target=+$('target').value;s.finalTarget=+$('finalTarget').value;s.timeoutLimit=+$('timeoutLimit').value;s.timeoutsHome=s.timeoutsAway=s.timeoutLimit;save()};
 $('openOverlay').onclick=()=>window.open(location.href.split('?')[0]+'?overlay=1','vb-overlay');$('copy').onclick=async()=>{let u=location.href.split('?')[0]+'?overlay=1';try{await navigator.clipboard.writeText(u);alert('Overlay URL copied')}catch(e){prompt('Copy overlay URL',u)}};
 $('export').onclick=()=>{let b=new Blob([JSON.stringify(s,null,2)],{type:'application/json'}),a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='volleyball-match-backup.json';a.click();URL.revokeObjectURL(a.href)};$('import').onclick=()=>$('file').click();$('file').onchange=e=>{let f=e.target.files[0];if(!f)return;let r=new FileReader();r.onload=()=>{try{s=JSON.parse(r.result);save()}catch(e){alert('Invalid backup')}};r.readAsText(f)};
-let ov=new URLSearchParams(location.search).get('overlay')==='1';if(ov){document.querySelector('.stage').dataset.pos=new URLSearchParams(location.search).get('pos')||'left';$('controller').classList.add('hidden');$('overlayScreen').classList.remove('hidden');document.body.style.background='transparent';document.documentElement.style.background='transparent'}else{let map={homeName:'home',awayName:'away',homeColor:'homeColor',awayColor:'awayColor',homeLogo:'homeLogo',awayLogo:'awayLogo',format:'format',target:'target',finalTarget:'finalTarget',timeoutLimit:'timeoutLimit'};Object.entries(map).forEach(([id,k])=>$(id).value=s[k])}render();
-
-// Firebase sign-in is required only for the controller. The overlay is read-only.
-if(!ov){
-  $('cloudLogin').onclick=async()=>{
-    const email=prompt('Firebase controller account email:');
-    if(!email)return;
-    const password=prompt('Firebase controller account password:');
-    if(!password)return;
-    try{await fbAuth.signInWithEmailAndPassword(email.trim(),password)}
-    catch(err){alert('Sign-in failed: '+err.message)}
-  };
-  $('cloudLogout').onclick=()=>fbAuth.signOut();
-  fbAuth.onAuthStateChanged(user=>{
-    $('cloudLogin').classList.toggle('hidden',!!user);
-    $('cloudLogout').classList.toggle('hidden',!user);
-    $('cloudStatus').textContent=user
-      ? 'Connected as '+user.email+'. Score changes sync live to the broadcast overlay.'
-      : 'Not signed in. Local controls work on this device, but live cloud updates require sign-in.';
-    if(user && window.__firebaseSnapshotMissing){
-      matchRef.set(s).catch(err=>{$('cloudStatus').textContent='Firebase write failed: '+err.message});
-      window.__firebaseSnapshotMissing=false;
-    }
-  });
-}
-
-// Subscribe on both devices. Database rules should allow public reads and authenticated writes.
-matchRef.on('value',snapshot=>{
-  const remote=snapshot.val();
-  if(remote && typeof remote==='object'){
-    s={...D(),...remote};
-    if(!Array.isArray(s.undo))s.undo=[];
-    localStorage.setItem('vb-live-state',JSON.stringify(s));
-    render();
-  }else{
-    window.__firebaseSnapshotMissing=true;
-    if(!ov && fbAuth.currentUser){
-      matchRef.set(s).catch(err=>{$('cloudStatus').textContent='Firebase write failed: '+err.message});
-      window.__firebaseSnapshotMissing=false;
-    }
-  }
-});
-
-window.addEventListener('storage',e=>{if(e.key==='vb-live-state'){s=load()||s;render()}});if('BroadcastChannel'in window){let bc=new BroadcastChannel('vb-live-score');bc.onmessage=()=>{s=load()||s;render()};let old=save;save=(c)=>{old(c);bc.postMessage('update')}}
+let ov=new URLSearchParams(location.search).get('overlay')==='1';if(ov){document.querySelector('.stage').dataset.pos=new URLSearchParams(location.search).get('pos')||'left';$('controller').classList.add('hidden');$('overlayScreen').classList.remove('hidden');document.body.style.background='transparent';document.documentElement.style.background='transparent'}else{let map={homeName:'home',awayName:'away',homeColor:'homeColor',awayColor:'awayColor',homeLogo:'homeLogo',awayLogo:'awayLogo',homeRank:'homeRank',awayRank:'awayRank',homeRecord:'homeRecord',awayRecord:'awayRecord',format:'format',target:'target',finalTarget:'finalTarget',timeoutLimit:'timeoutLimit'};Object.entries(map).forEach(([id,k])=>$(id).value=s[k]??'')}render();
+window.addEventListener('storage',e=>{if(e.key==='vb-live-state'){s=load()||s;render()}});if('BroadcastChannel'in window){let bc=new BroadcastChannel('vb-live-score');bc.onmessage=()=>{s=load()||s;render()};let old=save;save=(c)=>{localStorage.setItem('vb-live-state',JSON.stringify(s));bc.postMessage('update');render(c)}}
 </script></body></html>
