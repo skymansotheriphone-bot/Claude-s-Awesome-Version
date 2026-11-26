@@ -125,7 +125,7 @@ input[type=color]{padding:4px;height:43px}
 .timeout.in{animation:rcIn .5s cubic-bezier(.2,.8,.2,1) both}
 .timeout.out{animation:rcOut .4s ease-in both}
 .to-main{display:flex;align-items:center;gap:.8em;padding:.5em .9em}
-.to-logo{position:relative;flex:none;display:grid;place-items:center;width:2.9em;height:2.9em;border-radius:50%;background:#f4f6f8;color:var(--c);font-size:1.1em;font-weight:800;overflow:hidden;box-shadow:0 .1em .3em rgba(0,0,0,.4)}
+.to-logo{position:relative;flex:none;display:grid;place-items:center;width:2.9em;height:2.9em;border-radius:50%;background:#f4f6f8;color:var(--lc,var(--c));font-size:1.1em;font-weight:800;overflow:hidden;box-shadow:0 .1em .3em rgba(0,0,0,.4)}
 .to-logo img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;background:#f4f6f8}
 .to-txt{flex:1;min-width:0}
 .to-tag{font-size:.85em;font-weight:700;letter-spacing:.14em;opacity:.92}
@@ -199,7 +199,7 @@ let seenTo=null,seenToEnd=null,toTick,toTok=0;
 function hideTimeout(instant){clearInterval(toTick);let el=$('timeout');if(el.classList.contains('hidden'))return;if(instant){el.className='timeout hidden';return}el.classList.remove('in','low');el.classList.add('out');setTimeout(()=>{if(el.classList.contains('out'))el.className='timeout hidden'},400)}
 function startTimeout(){clearTimeout(rcT1);clearTimeout(rcT2);$('recap').className='recap hidden';clearInterval(toTick);
  let el=$('timeout'),side=s.toTeam==='away'?'away':'home',name=side==='home'?s.home:s.away,color=(side==='home'?s.homeColor:s.awayColor)||(side==='home'?'#1769aa':'#b72b3c'),url=side==='home'?s.homeLogo:s.awayLogo,left=side==='home'?s.timeoutsHome:s.timeoutsAway,len=s.toLen||30,end=Date.now()+len*1000,tok=++toTok;
- el.style.setProperty('--c',color);el.style.setProperty('--k',ink(color));
+ el.style.setProperty('--c',color);el.style.setProperty('--k',ink(color));el.style.setProperty('--lc',ink(color)==='#fff'?color:'#10151a');
  el.innerHTML='<div class="to-main"><span class="to-logo">'+rcLogo(url,name[0].toUpperCase())+'</span><div class="to-txt"><div class="to-tag">TIMEOUT \u00b7 '+(left?left+' LEFT':'NONE LEFT')+'</div><div class="to-name">'+esc(name)+'</div></div><div class="to-clock" id="toClock"></div></div><div class="to-bar"><i id="toBar"></i></div>';
  el.className='timeout in';
  let tick=()=>{let r=Math.max(0,(end-Date.now())/1000),sec=Math.ceil(r);$('toClock').textContent=Math.floor(sec/60)+':'+String(sec%60).padStart(2,'0');$('toBar').style.width=(r/len*100)+'%';el.classList.toggle('low',sec<=10&&sec>0);if(r<=0){clearInterval(toTick);setTimeout(()=>{if(tok===toTok)hideTimeout()},1500)}};
